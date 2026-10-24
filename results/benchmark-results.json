@@ -1,0 +1,71 @@
+{
+  "benchmark": "three-architecture retrieval comparison",
+  "status": "complete",
+  "dataset": "HotpotQA distractor validation split",
+  "question_rows": [5050, 5250],
+  "sample_size": 200,
+  "sampling_seed": 20261023,
+  "corpus_paragraphs": 48466,
+  "encoder": "intfloat/e5-base-v2",
+  "reranker": "Hard-negative fine-tuned cross-encoder/ms-marco-MiniLM-L6-v2",
+  "candidate_depth": 50,
+  "retrieval_hops": 2,
+  "rrf_k": 60,
+  "answer_generation": false,
+  "primary_metric": "both_gold@k: fraction of questions with both gold supporting paragraphs in the final top k",
+  "results": {
+    "dense": {
+      "n": 200,
+      "both_gold_at_2": 0.60,
+      "both_gold_at_5": 0.895,
+      "both_gold_at_10": 0.92,
+      "both_gold_at_20": 0.945,
+      "both_gold_in_expanded_candidates": 0.955,
+      "mean_retrieval_seconds": 0.438
+    },
+    "hybrid": {
+      "n": 200,
+      "both_gold_at_2": 0.59,
+      "both_gold_at_5": 0.90,
+      "both_gold_at_10": 0.94,
+      "both_gold_at_20": 0.96,
+      "both_gold_in_expanded_candidates": 0.96,
+      "mean_retrieval_seconds": 0.402
+    },
+    "query_rewrite": {
+      "n": 200,
+      "both_gold_at_2": 0.59,
+      "both_gold_at_5": 0.94,
+      "both_gold_at_10": 0.97,
+      "both_gold_at_20": 0.97,
+      "both_gold_in_expanded_candidates": 0.97,
+      "mean_retrieval_seconds": 4.740,
+      "rewrite_statuses": {
+        "rewritten": 78,
+        "no_grounded_queries": 122
+      }
+    }
+  },
+  "paired_query_rewrite_vs_hybrid": {
+    "at_5": {
+      "wins": 9,
+      "losses": 1,
+      "ties": 190,
+      "difference_percentage_points": 4.0,
+      "bootstrap_95_percent_interval_percentage_points": [1.0, 7.0]
+    },
+    "at_10": {
+      "wins": 6,
+      "losses": 0,
+      "ties": 194,
+      "difference_percentage_points": 3.0,
+      "bootstrap_95_percent_interval_percentage_points": [1.0, 5.5]
+    }
+  },
+  "limitations": [
+    "This is a 200-question validation-slice retrieval experiment, not the official HotpotQA test leaderboard.",
+    "both_gold measures retrieval of supporting paragraphs, not whether a generated answer is correct.",
+    "The methods share the same corpus, E5 encoder, and trained reranker; only the pipeline differs.",
+    "The separate 2,000-question run stopped at 569 questions per architecture after Gemini quota failures and is not a completed comparison."
+  ]
+}
